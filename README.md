@@ -1,0 +1,1 @@
+human shitcode > ai vibecode
