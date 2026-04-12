@@ -52,7 +52,7 @@ impl ComposeFile {
         }
       }
 
-      if let Some(_) = &s.postgres {
+      if let Some(_) = &s.postgres && idmap.contains_key("srvr_adminer") {
         let pgid = &format!("{id}_pg");
         let path = idmap.get("srvr_adminer").unwrap();
         // Link network
