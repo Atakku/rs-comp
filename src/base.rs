@@ -12,17 +12,24 @@ pub enum Base {
   Common,
   Pcores,
   Ecores,
-  WithGpu,
+  Gpu,
 }
 
 impl Base {
-  pub fn apply(&self, c: &mut Service) {
+  pub fn parent(&self) -> Option<Base> {
     match self {
-      Base::Pcores => Base::Common.apply(c),
-      Base::Ecores => Base::Common.apply(c),
-      Base::WithGpu => Base::Pcores.apply(c),
-      Base::Common => {}
-    };
+      Base::Common => None,
+
+      Base::Pcores => Some(Base::Common),
+      Base::Ecores => Some(Base::Common),
+      Base::Gpu => Some(Base::Common),
+    }
+  }
+
+  pub fn apply(&self, c: &mut Service, host: &str) {
+    if let Some(parent) = self.parent() {
+      parent.apply(c, host);
+    }
 
     match self {
       Base::Common => {
@@ -32,18 +39,43 @@ impl Base {
         c.add_env("GID", "1000");
         c.add_env("PUID", "1000");
         c.add_env("PGID", "1000");
-        c.add_env("TZ", "Europe/Belgrade");
         c.vec_push("volumes", "/etc/localtime:/etc/localtime:ro");
+
+        match host {
+          "srvr" | "home" => {
+            c.add_env("TZ", "Europe/Belgrade");
+          }
+          "neko" => {
+            c.add_env("TZ", "Europe/Moscow");
+          }
+          "fsmp" | "carp" => {
+            c.add_env("TZ", "Europe/Berlin");
+          }
+          _ => {}
+        }
       }
-      Base::Pcores => {
-        c.set_string("cpuset", "0-15");
-      }
-      Base::Ecores => {
-        c.set_string("cpuset", "16-23");
-      }
-      Base::WithGpu => {
-        c.set_string("runtime", "nvidia");
-      }
+      Base::Pcores => match host {
+        "srvr" => {
+          c.set_string("cpuset", "0-15");
+        }
+        _ => {}
+      },
+      Base::Ecores => match host {
+        "srvr" => {
+          c.set_string("cpuset", "16-23");
+        }
+        _ => {}
+      },
+      Base::Gpu => match host {
+        "srvr" => {
+          c.set_string("cpuset", "0-15");
+          c.set_string("runtime", "nvidia");
+        }
+        "home" => {
+          c.set_string("runtime", "amd");
+        }
+        _ => {}
+      },
     }
   }
 }
