@@ -22,7 +22,7 @@ impl Base {
 
       Base::Pcores => Some(Base::Common),
       Base::Ecores => Some(Base::Common),
-      Base::Gpu => Some(Base::Common),
+      Base::WithGpu => Some(Base::Pcores),
     }
   }
 
@@ -45,15 +45,9 @@ impl Base {
         c.vec_push("volumes", "/etc/localtime:/etc/localtime:ro");
 
         match host {
-          "srvr" | "home" => {
-            c.add_env("TZ", "Europe/Belgrade");
-          }
-          "neko" => {
-            c.add_env("TZ", "Europe/Moscow");
-          }
-          "fsmp" | "carp" => {
-            c.add_env("TZ", "Europe/Berlin");
-          }
+          "srvr" | "home" => c.add_env("TZ", "Europe/Belgrade"),
+          "neko" => c.add_env("TZ", "Europe/Moscow"),
+          "fsmp" | "carp" => c.add_env("TZ", "Europe/Berlin"),
           _ => {}
         }
       }
@@ -69,14 +63,9 @@ impl Base {
         }
         _ => {}
       },
-      Base::Gpu => match host {
-        "srvr" => {
-          c.set_string("cpuset", "0-15");
-          c.set_string("runtime", "nvidia");
-        }
-        "home" => {
-          c.set_string("runtime", "amd");
-        }
+      Base::WithGpu => match host {
+        "srvr" => c.set_string("runtime", "nvidia"),
+        "home" => c.set_string("runtime", "amd"),
         _ => {}
       },
     }
