@@ -26,10 +26,13 @@ impl Base {
     }
   }
 
-  pub fn apply(&self, c: &mut Service, host: &str) {
+  pub fn apply(&self, c: &mut Service) {
     if let Some(parent) = self.parent() {
-      parent.apply(c, host);
+      parent.apply(c);
     }
+
+    let host = hostname::get().unwrap();
+    let host = host.to_str().unwrap();
 
     match self {
       Base::Common => {

@@ -12,7 +12,7 @@ use crate::base::Base;
 #[derive(Default, Serialize, Deserialize, Clone)]
 pub struct Service {
   #[serde(skip_serializing)]
-  pub base: Option<String>,
+  pub base: Option<Base>,
   #[serde(skip_serializing)]
   pub internal: Option<bool>,
   #[serde(skip_serializing)]
@@ -51,10 +51,7 @@ impl Service {
     let mut old = HashMap::new();
     std::mem::swap(&mut self.inner, &mut old);
 
-    // peak shitcode
-    let base_split = base.split_once("_").unwrap();
-    let parsed_base: Base = serde_yaml::from_str(base_split.1).unwrap();
-    parsed_base.apply(self, &base_split.0);
+    base.apply(self);
 
     // Name containers appropriately unless overriden
     self.set_string("container_name", id);

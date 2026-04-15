@@ -129,7 +129,7 @@ server {{
 
         // Make base container
         let mut pg = Service {
-          base: Some(format!("{}_ecores", s.base.clone().unwrap().split_once("_").unwrap().0)),
+          base: Some(Base::Ecores),
           ..Default::default()
         };
         pg.apply_base(pgid);
