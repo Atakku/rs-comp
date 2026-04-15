@@ -12,7 +12,7 @@ pub enum Base {
   Common,
   Pcores,
   Ecores,
-  Gpu,
+  WithGpu,
 }
 
 impl Base {
