@@ -117,8 +117,12 @@ server {{
     set $$upstream {};
     proxy_pass http://$$upstream:{};
   }}
-}}",
-            ngx.domain, id, ngx.port
+
+  {}
+}}
+
+{}",
+            ngx.domain, id, ngx.port, ngx.extra_inner, ngx.extra_outer
           )),
         );
       }
