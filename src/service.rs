@@ -39,8 +39,8 @@ pub struct NginxSettings {
   pub instance: Option<String>,
   pub domain: String,
   pub port: u16,
-  pub extra_inner: String,
-  pub extra_outer: String
+  pub extra_inner: Option<String>,
+  pub extra_outer: Option<String>
 }
 
 impl Service {

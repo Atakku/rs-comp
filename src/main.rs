@@ -122,7 +122,7 @@ server {{
 }}
 
 {}",
-            ngx.domain, id, ngx.port, ngx.extra_inner, ngx.extra_outer
+            ngx.domain, id, ngx.port, ngx.extra_inner.unwrap_or_default(), ngx.extra_outer.unwrap_or_default()
           )),
         );
       }
