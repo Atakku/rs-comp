@@ -154,6 +154,9 @@ server {{
         pg.add_env("POSTGRES_USER", id);
         pg.add_env("POSTGRES_PASSWORD", pgs.password.clone());
 
+        // Allocate shared memory for postgres vaccuming
+        pg.set_string("shm_size", "1gb");
+
         pg.vec_push("volumes", format!("{}:/var/lib/postgresql", pgs.path));
 
         self.services.insert(pgid.into(), pg);
