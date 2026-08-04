@@ -112,13 +112,13 @@ server {{
   include /etc/nginx/shared/ssl.conf;
   server_name {};
 
+  {}
+
   location / {{
     include /etc/nginx/shared/proxy.conf;
     set $$upstream {};
     proxy_pass http://$$upstream:{};
   }}
-
-  {}
 }}
 
 {}",
