@@ -18,6 +18,8 @@ pub struct Service {
   #[serde(skip_serializing)]
   pub postgres: Option<PostgresSettings>,
   #[serde(skip_serializing)]
+  pub postgres_ext: Option<String>,
+  #[serde(skip_serializing)]
   pub nginx: Option<NginxSettings>,
   #[serde(skip_serializing)]
   #[serde(default)]
@@ -29,7 +31,6 @@ pub struct Service {
 
 #[derive(Default, Deserialize, Clone)]
 pub struct PostgresSettings {
-  pub external: Option<String>,
   pub password: String,
   pub image: String,
   pub path: String,

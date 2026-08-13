@@ -128,44 +128,42 @@ server {{
       }
 
       // Define postgres container
-      if let Some(pgs) = s.postgres.clone() {
-        if let Some(pgid) = pgs.external {
-          // Add it to parent and self and depencency
-          s.add_net(pgid.clone(), Default::default());
-          s.vec_push("depends_on", pgid);
-        } else {
-          let pgid = &format!("{id}_pg");
+      if let Some(pgid) = s.postgres_ext.clone() {
+        // Add it to parent and self and depencency
+        s.add_net(pgid.clone(), Default::default());
+        s.vec_push("depends_on", pgid);
+      } else if let Some(pgs) = s.postgres.clone() {
+        let pgid = &format!("{id}_pg");
 
-          // Make base container
-          let mut pg = Service {
-            base: Some(Base::Ecores),
-            ..Default::default()
-          };
-          pg.apply_base(pgid);
+        // Make base container
+        let mut pg = Service {
+          base: Some(Base::Ecores),
+          ..Default::default()
+        };
+        pg.apply_base(pgid);
 
-          // Establish pg network
-          let net = self.networks.entry(pgid.into()).or_default();
-          net.insert("name".into(), Value::String(pgid.into()));
-          net.insert("internal".into(), Value::Bool(true));
+        // Establish pg network
+        let net = self.networks.entry(pgid.into()).or_default();
+        net.insert("name".into(), Value::String(pgid.into()));
+        net.insert("internal".into(), Value::Bool(true));
 
-          // Add it to parent and self and depencency
-          pg.add_net(pgid, Default::default());
-          s.add_net(pgid, Default::default());
-          s.vec_push("depends_on", pgid);
+        // Add it to parent and self and depencency
+        pg.add_net(pgid, Default::default());
+        s.add_net(pgid, Default::default());
+        s.vec_push("depends_on", pgid);
 
-          // Setup the postgres container
-          pg.set_string("image", pgs.image.clone());
-          pg.add_env("POSTGRES_DB", id);
-          pg.add_env("POSTGRES_USER", id);
-          pg.add_env("POSTGRES_PASSWORD", pgs.password.clone());
+        // Setup the postgres container
+        pg.set_string("image", pgs.image.clone());
+        pg.add_env("POSTGRES_DB", id);
+        pg.add_env("POSTGRES_USER", id);
+        pg.add_env("POSTGRES_PASSWORD", pgs.password.clone());
 
-          // Allocate shared memory for postgres vaccuming
-          pg.set_string("shm_size", "1gb");
+        // Allocate shared memory for postgres vaccuming
+        pg.set_string("shm_size", "1gb");
 
-          pg.vec_push("volumes", format!("{}:/var/lib/postgresql", pgs.path));
+        pg.vec_push("volumes", format!("{}:/var/lib/postgresql", pgs.path));
 
-          self.services.insert(pgid.into(), pg);
-        }
+        self.services.insert(pgid.into(), pg);
       }
     }
   }
