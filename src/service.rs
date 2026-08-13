@@ -28,6 +28,7 @@ pub struct Service {
 }
 
 #[derive(Deserialize, Clone)]
+#[serde(untagged)]
 pub enum PostgresConfig {
   Local(PostgresSettings),
   External(String)
