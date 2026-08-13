@@ -16,7 +16,7 @@ pub struct Service {
   #[serde(skip_serializing)]
   pub internal: Option<bool>,
   #[serde(skip_serializing)]
-  pub postgres: Option<PostgresSettings>,
+  pub postgres: Option<PostgresConfig>,
   #[serde(skip_serializing)]
   pub nginx: Option<NginxSettings>,
   #[serde(skip_serializing)]
@@ -25,6 +25,12 @@ pub struct Service {
 
   #[serde(flatten)]
   pub(crate) inner: HashMap<String, Value>,
+}
+
+#[derive(Deserialize, Clone)]
+pub enum PostgresConfig {
+  Local(PostgresSettings),
+  External(String)
 }
 
 #[derive(Default, Deserialize, Clone)]
