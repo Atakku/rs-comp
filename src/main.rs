@@ -161,6 +161,13 @@ server {{
         // Allocate shared memory for postgres vaccuming
         pg.set_string("shm_size", "1gb");
 
+        // Setup a healthcheck
+        let hs = pg.get_map("healthcheck");
+        hs.insert("test".into(), vec!["CMD-SHELL", "pg_isready", "-U", id.as_str(), "-d", id.as_str()].into());
+        hs.insert("interval".into(), "10s".into());
+        hs.insert("timeout".into(), "5s".into());
+        hs.insert("retries".into(), 10.into());
+
         pg.vec_push("volumes", format!("{}:/var/lib/postgresql", pgs.path));
 
         self.services.insert(pgid.into(), pg);

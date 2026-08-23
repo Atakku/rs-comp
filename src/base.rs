@@ -47,7 +47,7 @@ impl Base {
         match host {
           "srvr" | "home" | "strk" => c.add_env("TZ", "Europe/Belgrade"),
           "neko" => c.add_env("TZ", "Europe/Moscow"),
-          "fsmp" | "carp" => c.add_env("TZ", "Europe/Berlin"),
+          "carp" => c.add_env("TZ", "Europe/Berlin"),
           _ => {}
         }
       }
