@@ -24,6 +24,9 @@ struct ComposeFile {
   // temp
   #[serde(default)]
   networks: HashMap<String, HashMap<String, Value>>,
+  // temp
+  #[serde(default)]
+  volumes: HashMap<String, HashMap<String, Value>>,
 }
 
 impl ComposeFile {
