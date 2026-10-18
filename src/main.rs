@@ -129,7 +129,7 @@ server {{
           )),
         );
         let hs = s.get_map("healthcheck");
-        hs.insert("test".into(), vec!["CMD", "service", "nginx", "status"].into());
+        hs.insert("test".into(), vec!["CMD-SHELL", "service nginx status"].into());
         hs.insert("interval".into(), "10s".into());
         hs.insert("timeout".into(), "5s".into());
         hs.insert("retries".into(), 5.into());
