@@ -128,11 +128,6 @@ server {{
             ngx.domain, ngx.extra_inner.unwrap_or_default(), id, ngx.port, ngx.extra_outer.unwrap_or_default()
           )),
         );
-        let hs = s.get_map("healthcheck");
-        hs.insert("test".into(), vec!["CMD-SHELL", "service nginx status"].into());
-        hs.insert("interval".into(), "10s".into());
-        hs.insert("timeout".into(), "5s".into());
-        hs.insert("retries".into(), 5.into());
       }
 
       // Define postgres container
