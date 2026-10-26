@@ -166,7 +166,7 @@ server {{
 
         // Setup a healthcheck
         let hs = pg.get_map("healthcheck");
-        hs.insert("test".into(), vec!["CMD-SHELL", "pg_isready", "-U", id.as_str(), "-d", id.as_str()].into());
+        hs.insert("test".into(), vec!["CMD-SHELL", &format!("pg_isready -U {id} -d {id}")].into());
         hs.insert("interval".into(), "10s".into());
         hs.insert("timeout".into(), "5s".into());
         hs.insert("retries".into(), 10.into());
